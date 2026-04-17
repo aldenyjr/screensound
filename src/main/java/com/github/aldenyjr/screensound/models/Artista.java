@@ -77,4 +77,5 @@ public class Artista {
                 musicas != null ? musicas.size() : 0
         );
     }
+
 }
