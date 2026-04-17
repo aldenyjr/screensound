@@ -1,9 +1,11 @@
 package com.github.aldenyjr.screensound.principal;
 
 import com.github.aldenyjr.screensound.models.Artista;
+import com.github.aldenyjr.screensound.models.Musica;
 import com.github.aldenyjr.screensound.models.TipoArtista;
 import com.github.aldenyjr.screensound.repository.ArtistaRepository;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Principal {
@@ -24,6 +26,7 @@ public class Principal {
                     
                     Menu de Opções:
                     1 - Cadastrar artistas
+                    2 - Cadastrar músicas
                     
                     0 - Sair
                     """;
@@ -34,6 +37,9 @@ public class Principal {
             switch (opcao) {
                 case 1:
                     cadastrarArtistas();
+                    break;
+                case 2:
+                    cadastrarMusicas();
                     break;
                 case 0:
                     System.out.printf("Saindo...");
@@ -47,7 +53,7 @@ public class Principal {
 
     private void cadastrarArtistas() {
         var cadastrarNovo = "s";
-        while (cadastrarNovo.equals("s")) {
+        while (cadastrarNovo.equalsIgnoreCase("s")) {
             switch (cadastrarNovo) {
                 case "s":
                     System.out.printf("informe o nome desse artista: ");
@@ -62,13 +68,28 @@ public class Principal {
                     cadastrarNovo = scanner.nextLine();
                     break;
                 case "n":
-                    return;
+                    break;
                 default:
                     System.out.println("Opção invalida, tente novamente!");
                     break;
             }
-
         }
+    }
 
+    private void cadastrarMusicas() {
+        System.out.printf("Cadastrar musica de que artista?: ");
+        var nome = scanner.nextLine();
+
+        Optional<Artista> artista = artistaRepository.findByNomeIgnoreCase(nome);
+
+        if(artista.isPresent()) {
+            System.out.printf("Informe o titulo da música: ");
+            var nomeMusica = scanner.nextLine();
+            Musica musica = new Musica(nomeMusica);
+            artista.get().adicionaMusica(musica);
+            artistaRepository.save(artista.get());
+        } else {
+            System.out.println("Artista não encontrado");
+        }
     }
 }

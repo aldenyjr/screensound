@@ -62,4 +62,9 @@ public class Artista {
         musicas.forEach(e -> e.setArtista(this));
         this.musicas = musicas;
     }
+
+    public void adicionaMusica(Musica musica) {
+        musica.setArtista(this);
+        this.musicas.add(musica);
+    }
 }
