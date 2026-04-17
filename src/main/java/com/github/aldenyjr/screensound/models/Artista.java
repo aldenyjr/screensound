@@ -67,4 +67,14 @@ public class Artista {
         musica.setArtista(this);
         this.musicas.add(musica);
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Artista[nome='%s', tipo=%s, totalMusicas=%d]",
+                nome,
+                tipoArtista,
+                musicas != null ? musicas.size() : 0
+        );
+    }
 }

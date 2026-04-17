@@ -5,6 +5,7 @@ import com.github.aldenyjr.screensound.models.Musica;
 import com.github.aldenyjr.screensound.models.TipoArtista;
 import com.github.aldenyjr.screensound.repository.ArtistaRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -27,6 +28,8 @@ public class Principal {
                     Menu de Opções:
                     1 - Cadastrar artistas
                     2 - Cadastrar músicas
+                    3 - Listar artistas
+                  
                     
                     0 - Sair
                     """;
@@ -40,6 +43,9 @@ public class Principal {
                     break;
                 case 2:
                     cadastrarMusicas();
+                    break;
+                case 3:
+                    listarArtistas();
                     break;
                 case 0:
                     System.out.printf("Saindo...");
@@ -91,5 +97,10 @@ public class Principal {
         } else {
             System.out.println("Artista não encontrado");
         }
+    }
+
+    private void listarArtistas(){
+        List<Artista> artistas = artistaRepository.findAll();
+        artistas.forEach(System.out::println);
     }
 }
