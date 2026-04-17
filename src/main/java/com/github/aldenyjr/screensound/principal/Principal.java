@@ -22,16 +22,17 @@ public class Principal {
         var opcao = -1;
         while (opcao != 0) {
             var menu = """
-                    **************************
-                    *  SCREEN SOUND MÚSICAS  *
-                    **************************
+                    ************************************
+                    *       SCREEN SOUND MÚSICAS       *
+                    ************************************
                     
                     Menu de Opções:
                     1 - Cadastrar artistas
                     2 - Cadastrar músicas
                     3 - Listar artistas
                     4 - Listar músicas
-                  
+                    5 - Buscar músicas por artista
+                    6 - Deletar artista
                     
                     0 - Sair
                     """;
@@ -52,11 +53,17 @@ public class Principal {
                 case 4:
                     listarMusicas();
                     break;
+                case 5:
+                    buscarMusicasPorArtista();
+                    break;
+                case 6:
+                    deletarArtista();
+                    break;
                 case 0:
-                    System.out.printf("Saindo...");
+                    System.out.println("Saindo...");
                     break;
                 default:
-                    System.out.printf("Opção Invalida, verifique e tente novamente.");
+                    System.out.println("Opção Invalida, verifique e tente novamente.");
                     break;
             }
         }
@@ -93,7 +100,7 @@ public class Principal {
 
         Optional<Artista> artista = artistaRepository.findByNomeIgnoreCase(nome);
 
-        if(artista.isPresent()) {
+        if (artista.isPresent()) {
             System.out.printf("Informe o titulo da música: ");
             var nomeMusica = scanner.nextLine();
             Musica musica = new Musica(nomeMusica);
@@ -104,17 +111,46 @@ public class Principal {
         }
     }
 
-    private void listarArtistas(){
+    private void listarArtistas() {
         List<Artista> artistas = artistaRepository.findAll();
         artistas.forEach(System.out::println);
     }
 
-    private void listarMusicas(){
+    private void listarMusicas() {
         List<Artista> artistas = artistaRepository.findAll();
         artistas.stream()
                 .flatMap(artista -> artista.getMusicas()
                         .stream()
                         .sorted(Comparator.comparing(Musica::getTitulo)))
                 .forEach(System.out::println);
+    }
+
+    private void buscarMusicasPorArtista() {
+        System.out.printf("Informe o nome do artista que deseja buscar: ");
+        var nomeArtista = scanner.nextLine();
+        Optional<Artista> artista = artistaRepository.findByNomeIgnoreCase(nomeArtista);
+        if (artista.isPresent()) {
+            if (artista.get().getMusicas().isEmpty()) {
+                System.out.printf("O artista: %s ainda não possui músicas cadastradas\n", artista.get().getNome());
+                return;
+            }
+            artista.get().getMusicas().stream()
+                    .sorted(Comparator.comparing(Musica::getTitulo))
+                    .forEach(System.out::println);
+        } else {
+            System.out.println("Artista não encontrado, verifique e tente novamente");
+        }
+    }
+
+    private void deletarArtista() {
+        System.out.printf("Informe o nome do artista que deseja deletar: ");
+        var nomeArtista = scanner.nextLine();
+        Optional<Artista> artista = artistaRepository.findByNomeIgnoreCase(nomeArtista);
+        if (artista.isPresent()) {
+            artistaRepository.delete(artista.get());
+            System.out.println("Artista deletado com sucesso!");
+        } else {
+            System.out.println("Artista não encontrado, verifique e tente novamente");
+        }
     }
 }
