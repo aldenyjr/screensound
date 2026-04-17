@@ -4,6 +4,7 @@ import com.github.aldenyjr.screensound.models.Artista;
 import com.github.aldenyjr.screensound.models.Musica;
 import com.github.aldenyjr.screensound.models.TipoArtista;
 import com.github.aldenyjr.screensound.repository.ArtistaRepository;
+import com.github.aldenyjr.screensound.services.ConsultaOpenAi;
 
 import java.util.Comparator;
 import java.util.List;
@@ -33,6 +34,7 @@ public class Principal {
                     4 - Listar músicas
                     5 - Buscar músicas por artista
                     6 - Deletar artista
+                    7 - Pesquisar sobre o artista
                     
                     0 - Sair
                     """;
@@ -58,6 +60,9 @@ public class Principal {
                     break;
                 case 6:
                     deletarArtista();
+                    break;
+                case 7:
+                    pesquisarSobreArtista();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -152,5 +157,12 @@ public class Principal {
         } else {
             System.out.println("Artista não encontrado, verifique e tente novamente");
         }
+    }
+
+    private void pesquisarSobreArtista() {
+        System.out.printf("Informe o nome do artista que deseja saber mais: ");
+        var nomeArtista = scanner.nextLine();
+        var resposta = ConsultaOpenAi.obterInformacao(nomeArtista);
+        System.out.printf(resposta + '\n');
     }
 }
